@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity(name = "transaction_record")
 public class TransactionRecord {
@@ -12,39 +14,41 @@ public class TransactionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "sender_id", nullable = false)
-    private long senderId;
-    @Column(name = "recipient_id", nullable = false)
-    private long recipientId;
+    @ManyToOne(targetEntity = UserRecord.class)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private UserRecord sender;
+    @ManyToOne(targetEntity = UserRecord.class)
+    @JoinColumn(name = "recipient_id", nullable = false)
+    private UserRecord recipient;
     @Column(name = "amount", nullable = false)
     private float amount;
-    @Column(name = "is_successful", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private boolean isSuccessful;
+
+    @Column(name = "incentive", nullable = true, columnDefinition = "FLOAT DEFAULT 0")
+    private float incentive;
 
     public TransactionRecord() {
     }
 
-    public TransactionRecord(long senderId, long recipientId, float amount, boolean isSuccessful) {
-        this.senderId = senderId;
-        this.recipientId = recipientId;
+    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount,  float incentive) {
+        this.sender = sender;
+        this.recipient = recipient;
         this.amount = amount;
-        this.isSuccessful = isSuccessful;
     }
 
-    public long getSenderId() {
-        return senderId;
+    public Long getId() {
+        return id;
     }
-
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
+    public UserRecord getSender() {
+        return sender;
     }
-
-    public long getRecipientId() {
-        return recipientId;
+    public void setSender(UserRecord sender) {
+        this.sender = sender;
     }
-
-    public void setRecipientId(long recipientId) {
-        this.recipientId = recipientId;
+    public UserRecord getRecipient() {
+        return recipient;
+    }
+    public void setRecipient(UserRecord recipient) {
+        this.recipient = recipient;
     }
 
     public float getAmount() {
